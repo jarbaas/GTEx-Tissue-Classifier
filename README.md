@@ -2,7 +2,7 @@
 A bioinformatics tool to predict tissue origin from unknown RNA-seq profiles using GTEx reference data. Built with Python.
 
 ## Biological Question
-Sample identity is a cruical part of transcriptomics research. However, due to incorrect labeling of samples, loss of metadata, or cross-contaminiation, the tissue origins of particular samples may be lost. Furthermore, there are also forensic applications for the tracing of tissue origins in unknown samples. Provided the RNA sequencing of a given sample, can its tissue of origin be determined by comparing its gene expression signature to a human reference database?
+Sample identity is a cruical part of transcriptomics research. However, due to incorrect labeling of samples, loss of metadata, or cross-contaminiation, the tissue origins of particular samples may be missing. Furthermore, there are also forensic applications for the tracing of tissue origins in unknown samples. Provided the RNA sequencing of a given sample, can its tissue of origin be determined by comparing its gene expression signature to a human reference database?
 
 This tool utilizes the Genotype-Tissue Expression Portal, a database of tissue and cell-specific gene expression with samples spanning 54 non-diseased tissue sites across ~1000 adults. By deriving a similarity score between the unknown sample's expression profile and GTEx reference tissues, this tool will offer a statistical likelihood of its tissue identity. 
 
