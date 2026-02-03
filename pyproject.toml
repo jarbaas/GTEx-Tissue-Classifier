@@ -19,3 +19,6 @@ classifiers = [
 
 [tool.setuptools]
 packages = ["gtex_tissue_classifier"]
+
+[project.scripts]
+gtex-classifier = "gtex_tissue_classifier.architecture:main"
