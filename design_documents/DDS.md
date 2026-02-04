@@ -11,36 +11,36 @@ Goal (from SRS): The goal of GTEx-Tissue-Classifier is to identify tissue origin
 ### Module 1 - Architecture
 * Goal: Manage user inputs, choose between simulation vs real data runs, manages data flow between downstream modules. 
 * Functions: 
-	* main() - Decides between running the tool on simulated data or real data
-	* parse_arguments() - uses argparse to understand flags on data such as '--input', '--output', '--mode'
-	* load_input(filepath) - Reads users CSV file, validates existence of "Gene" and "TPM" columns, returns Pandas DF
-	* validate_normalization(df) - Ensures input sample is TPM normalized and raises error if raw counts are detected 
+	* ```main()``` - Decides between running the tool on simulated data or real data
+	* ```parse_arguments()``` - uses argparse to understand flags on data such as '--input', '--output', '--mode'
+	* ```load_input(filepath)``` - Reads users CSV file, validates existence of "Gene" and "TPM" columns, returns Pandas DF
+	* ```validate_normalization(df)``` - Ensures input sample is TPM normalized and raises error if raw counts are detected 
 ### Module 2 - Math
 * Goal: Purely numerical, accepts vectors and returns statistical scores
 * Functions:
-	* calculate_spearman(vector, tissue_matrix) - Calculates correlation between input vector and tissue columns in the tissue matrix
-	* rank_matches(correlation_dict) - Sorts the correlation results in descending order to identify closest matches
-	* filter_variable_genes(df, n=2000) - Filters the gene lists in the tissue dataframe to the top 2000 most variable, relying on unique genes to distinguish tissues
+	* ```calculate_spearman(vector, tissue_matrix)``` - Calculates correlation between input vector and tissue columns in the tissue matrix
+	* ```rank_matches(correlation_dict)``` - Sorts the correlation results in descending order to identify closest matches
+	* ```filter_variable_genes(df, n=2000)``` - Filters the gene lists in the tissue dataframe to the top 2000 most variable, relying on unique genes to distinguish tissues
 
 ### Module 3 - Simulation
 * Goal: Generates the simulation data for unit tests and function testing. Can be used to validate math functions without needing full GTEx dataset. 
 * Functions:
-	* generate_mock_tissues(rows=100, cols=5) - Creates a reference matrix with representative gene TPM values in rows and example tissues in columns
-	* generate_mock_sample(target_tissue, noise) - Creates an unknown sample matrix with representative genes in rows and TPM values in columns.     Gaussian noise can be specified in args to verify algorithmic handling. 
+	* ```generate_mock_tissues(rows=100, cols=5)``` - Creates a reference matrix with representative gene TPM values in rows and example tissues in columns
+	* ```generate_mock_sample(target_tissue, noise)``` - Creates an unknown sample matrix with representative genes in rows and TPM values in columns.     Gaussian noise can be specified in args to verify algorithmic handling. 
 
 ### Module 4 - Real data
 * Goal: Handles extraction, transformation and loading of raw GTEx source files. Used to build database for the full tool. 
 * Functions:
-	* parse_raw_gct(filepath) - Parses the .gct files downloaded from GTEx database
-	* compute_TPM(tissue_matrix) - Calculates median TPM vector for tissues in tissue matrix
-	* build_db(file_list) - Runs through tissue GCT files, computes median TPM values, outputs 'gtex_reference.csv' database
+	* ```parse_raw_gct(filepath)``` - Parses the .gct files downloaded from GTEx database
+	* ```compute_TPM(tissue_matrix)``` - Calculates median TPM vector for tissues in tissue matrix
+	* ```build_db(file_list)``` - Runs through tissue GCT files, computes median TPM values, outputs 'gtex_reference.csv' database
 
 ### Module 5 - Visualization and Outputs
 * Goal: Converts the mathematical outputs in math module into graphs and images
 * Functions: 
-	* plot_correlations(results_dict, output_path) - Uses matplotlib to generate a bar chart of the top five tissue matches
-	* plot_marker_heatmap(user_vector, ref_vector) - Generates a heatmap comparing top markers of input samples to top markers defining the closest matching tissue
-	* write_summary_report(resultsm, filename) - Outputs the final tissue prediction, confidence score and/or any warnings into an html file
+	* ```plot_correlations(results_dict, output_path)``` - Uses matplotlib to generate a bar chart of the top five tissue matches
+	* ```plot_marker_heatmap(user_vector, ref_vector)``` - Generates a heatmap comparing top markers of input samples to top markers defining the closest matching tissue
+	* ```write_summary_report(resultsm, filename)``` - Outputs the final tissue prediction, confidence score and/or any warnings into an html file
 
 
 ## Milestones
@@ -68,8 +68,8 @@ Goal (from SRS): The goal of GTEx-Tissue-Classifier is to identify tissue origin
 **Goal:** Replace sample data with full GTEx data
 **Tasks:**
 	* Implement module 4
-	* Download GTEx tissue files and run build_db()
-	* Test sample data on build_db() to verify correct output
+	* Download GTEx tissue files and run ```build_db()```
+	* Test sample data on ```build_db()``` to verify correct output
 ### Milestone 5 - Outputs
 **Goal:** Create outputs for user visualization
 **Tasks:**
