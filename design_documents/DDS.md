@@ -44,40 +44,56 @@ Goal (from SRS): The goal of GTEx-Tissue-Classifier is to identify tissue origin
 
 
 ## Milestones
+
 ### Milestone 1 - Architecture
-**Goal:** establish the repository, design documents and package architecture
+
+**Goal:** Establish the repository, design documents and package architecture
+
 **Tasks:**
-	* Set up directory structure
-	* Implement pyproject.toml
-	* Write design documents including SRS, WBS, DDS
+* Set up directory structure
+* Implement `pyproject.toml`
+* Write design documents including SRS, WBS, DDS
+
 ### Milestone 2 - Simulation
+
 **Goal:** Verify functions in math module work on simulation data
-**Tasks:** 
-	* Implement math module
-	* Implement simulation module
-	* Create simulation data
-	* Run math functions on sim data, assess accurate tissue verification
+
+**Tasks:**
+* Implement math module
+* Implement simulation module
+* Create simulation data
+* Run math functions on sim data, assess accurate tissue verification
+
 ### Milestone 3 - Prototype
+
 **Goal:** Design a working CLI prototype that can accept a user input and produce a math result
+
 **Tasks:**
-	* Implement Module 1
-	* Verify inputs are properly loaded
-	* Write unit tests for load_input to test for bad file structures
-	* Connect module 1 to module 2
+* Implement Module 1
+* Verify inputs are properly loaded
+* Write unit tests for `load_input()` to test for bad file structures
+* Connect module 1 to module 2
+
 ### Milestone 4 - Real Data Integration
+
 **Goal:** Replace sample data with full GTEx data
+
 **Tasks:**
-	* Implement module 4
-	* Download GTEx tissue files and run ```build_db()```
-	* Test sample data on ```build_db()``` to verify correct output
+* Implement module 4
+* Download GTEx tissue files and run `build_db()`
+* Test sample data on `build_db()` to verify correct output
+
 ### Milestone 5 - Outputs
+
 **Goal:** Create outputs for user visualization
+
 **Tasks:**
-	* Implement module 5
-	* Test output functions on sample data, polish images to ensure clean output for users
-	* Verify output functions on real data
-	* Run complete build
-	* Finalize 'README.md' and 'datasets.md'
-	* Submit final build
+* Implement module 5
+* Test output functions on sample data, polish images to ensure clean output for users
+* Verify output functions on real data
+* Run complete build
+* Finalize `README.md` and `datasets.md`
+* Submit final build
+
 
 AI use disclaimer: Google Gemini was used for advice on functions to include in modules
