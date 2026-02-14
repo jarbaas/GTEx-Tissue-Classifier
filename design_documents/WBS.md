@@ -1,4 +1,35 @@
 # Work Break Down (WBD) structure
+## Project:  Build package prototype 
+
+### Action: Create script to test input and output of data
+
+**Sub action: Create simulated data**
+
+- Tasks:
+  * Test `generate_mock_tissues` and `generate_mock_sample` in `simulation.py`
+- Deliverable:
+  * Mock .CSV file representing sample data and .GCT file representing input files. 
+- Completion:
+  * Correctly formatted files present in `data\simulated_data`
+
+**Sub action: Test loading and preparation of GTEx data**
+
+- Tasks:
+  * Write unit tests for `parse_raw_gct` and `compute_TPM` functions
+  * Run unit tests to examine unwanted behavior. 
+- Deliverable:
+  * Unit tests in `tests\test_real_data.py`
+- Completion:
+  * Unit tests run without raising errors on functions
+
+**Sub action: Write temporary script to test input and output of prototype**
+
+- Tasks:
+  * Create script that generates sample RNA Seq and GTEx data, then parses and ranks correlation of TPM values.
+- Deliverable: 
+  * `prototype_IO.py` in `\tests`
+- Completion:
+  * Package successfully outputs a ranked list of correlated genes between RNA Seq sample and GTEx sample. 
 
 ## Project: Compute the median TPM values of the GTEx tissues
 

@@ -1,17 +1,35 @@
-#  Goal: Purely numerical, accepts vectors and returns statistical scores
+#  Goal: Numerical, perform important statistical tests and filter results.
 import pandas as pd
 
-def calculate_spearman(vector, tissue_matrix):
+def calculate_spearman(sample_df, tissue_matrix):
     """
-    Calculates correlation between input vector and tissue columns in the tissue matrix.
-    """
-    pass
+    Calculates Spearman correlation between sample_df and tissue columns in the tissue matrix.
 
-def rank_matches(correlation_dict):
+    Args:
+        sample_df: DataFrame,  with gene names in rows and TPM values in columns.
+        tissue_matrix: DataFrame with genes in rows, tissue samples in columns, and TPM values as entries.
+    """
+    sample_series = sample_df.set_index('Gene')['TPM']
+    matched_genes = sample_series.index.intersection(tissue_matrix.index)
+    if len(matched_genes) == 0:
+        raise ValueError("No matching genes found between sample and tissue matrix.")
+    
+    aligned_sample = sample_series.loc[matched_genes]
+    aligned_tissue = tissue_matrix.loc[matched_genes]
+
+    corr_matrix = aligned_tissue.corrwith(aligned_sample, method='spearman')
+    corr_dict = corr_matrix.to_dict()
+    return corr_dict
+
+def rank_matches(corr_dict):
     """
     Sorts the correlation results in descending order to identify closest matches.
+
+    Args:
+        corr_dict: dict, 
     """
-    pass
+    ranked_tissues = sorted(corr_dict.items(), key=lambda x: x[1], reverse=True)
+    return ranked_tissues
 
 def filter_variable_genes(df, n=2000):
     """
