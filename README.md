@@ -22,7 +22,7 @@ The tool will output a results folder with the following:
 In instances where there are not enough genes present to make a prediction or there is a lack of housekeeping genes present, the tool will notify the user of QC failure so the sample can be re-evaluated.
 
 ## Data Sources
-This tool uses data processed from the V10 Release of the [adult GTEx portal](https://gtexportal.org/home/aboutAdultGtex). 
+This tool uses data processed from the V11 Release of the [adult GTEx portal](https://gtexportal.org/home/aboutAdultGtex). 
 
 ## Limitations
 - The GTEx database is built from healthy tissues. Inputting canceerous or diseased samples may result in lower correlation scores due to disease-specific gene dysregulation. 
