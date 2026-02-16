@@ -22,7 +22,7 @@ def parse_arguments():
 
 def load_input(filepath):
     """
-    Reads users CSV file, validates existence of "Gene" and "TPM" columns, returns Pandas DF.
+    Reads users CSV file, validates existence of "Gene" and "TPM" columns, returns Pandas DF. Note that the Gene column should contain Ensembl IDs in the format "ENSG00000X".
 
     Args:
         filepath: str, path to input CSV file.

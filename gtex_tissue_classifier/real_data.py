@@ -2,7 +2,6 @@
 import os
 from .architecture import read_file_data, PROJECT_ROOT
 import pandas as pd
-from cmapPy.pandasGEXpress.parse import parse
 import requests
 
 def download_gtex_data(tissue_filepath):
@@ -45,10 +44,9 @@ def parse_raw_gct(filepath):
             
     Output: tissue_matrix: Datagrame with genes in rows, tissue samples in columns, and TPM values as entries.
     """
-    gct_data = parse(filepath)
-    tissue_matrix = gct_data.data_df
-    if 'Description' in gct_data.row_metadata_df.columns:
-        tissue_matrix.insert(0, 'Description', gct_data.row_metadata_df['Description'])
+    tissue_matrix = pd.read_csv(filepath, sep='\t', skiprows=2)
+    if 'Name' in tissue_matrix.columns:
+        tissue_matrix.drop(columns=['Name'], inplace=True)
     return tissue_matrix
 
 def compute_TPM(tissue_matrix):

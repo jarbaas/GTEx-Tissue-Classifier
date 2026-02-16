@@ -33,13 +33,13 @@ def generate_mock_tissues(filename, num_genes=100, num_tissues=5):
 
 def generate_mock_sample(filename, num_genes=100):
     """
-    Creates an unknown sample matrix with representative genes in rows and TPM values in columns. Output is in CSV format.
+    Creates an unknown sample matrix with representative genes in rows and TPM values in columns. Output is in CSV format. 
     
     Args:
         filename: str, path to save the simulated sample CSV file.
         num_genes: int, number of genes to simulate.
     """
-    genes = [f"Gene_{i}" for i in range(num_genes)]
+    genes = [f"ENSG00000{i}" for i in range(num_genes)]
     tpm_vals = np.random.lognormal(mean=-1, sigma=1, size=num_genes) # Mean and sigma can be adjusted to modify TPM distribution
     df = pd.DataFrame({'Gene': genes, 'TPM': tpm_vals})
     df.to_csv(filename, index=False)

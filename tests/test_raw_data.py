@@ -40,3 +40,5 @@ class TestProcessingWithSimulatedData(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+# Unit test adapted from prompt to Google Gemini describing the input/output of respective functions. 
