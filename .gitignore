@@ -209,7 +209,6 @@ __marimo__/
 # Datasets
 data/processed/
 !data/tissue_list.txt
-*.sbat
 gtex_env/
 build/
 dist/
