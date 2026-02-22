@@ -4,7 +4,7 @@ from .architecture import read_file_data, PROJECT_ROOT
 import pandas as pd
 import requests
 
-def download_gtex_data(tissue_filepath):
+def download_gtex_data(tissue_filepath, output_dir):
     """
     Downloads .gct files for all tissues from the GTEx portal. Designate tissue list location in simple filepath argument, eg. /configs/tissue_list.txt.
 
@@ -15,7 +15,6 @@ def download_gtex_data(tissue_filepath):
         
     Output: Downloads .gct files for requested tissues to specified directory.
     """
-    output_dir = os.path.join(PROJECT_ROOT, "data/raw_gtex")
     os.makedirs(output_dir, exist_ok=True)
     base_url = "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue"
     tissues = read_file_data(tissue_filepath)
