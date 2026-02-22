@@ -52,7 +52,7 @@ pancreas_mixed_cell
 pituitary
 prostate
 skin_not_sun_exposed_suprapubic
-skin_not_sun_exposed_suprapubic
+skin_sun_exposed_lower_leg
 small_intestine_terminal_ileum
 small_intestine_terminal_ileum_lymphoid_aggregate
 small_intestine_terminal_ileum_mixed_cell
