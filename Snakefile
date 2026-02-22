@@ -10,7 +10,7 @@ rule all:
 
 rule download_data:
     output:
-        expand(f"{config['raw_dir']}/{{tissue}}.gct.gz", tissue=TISSUES)
+        expand(f"{config['raw_dir']}/{{tissue}}.gct.gz", tissue=tissue_list)
     run:
         from gtex_tissue_classifier.real_data import download_gtex_data
         download_gtex_data(config["tissue_list"], config["raw_dir"])
