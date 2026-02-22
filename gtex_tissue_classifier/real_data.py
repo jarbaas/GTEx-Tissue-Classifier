@@ -24,7 +24,7 @@ def download_gtex_data(tissue_filepath):
         url = f"{base_url}/gene_tpm_v11_{tissue}.gct.gz"
         response = requests.get(url, stream=True)
         if response.status_code == 200:
-            with open(f"data/raw_gtex/{tissue}.gct.gz", 'wb') as f:
+            with open(os.path.join(output_dir, f"{tissue}.gct.gz"), 'wb') as f:
                 for chunk in response.iter_content(chunk_size=8192):
                     if chunk:
                         f.write(chunk)

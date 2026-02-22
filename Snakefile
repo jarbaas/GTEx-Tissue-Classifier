@@ -1,6 +1,6 @@
 import yaml
 
-configfile: "config.yaml"
+configfile: "configs/config.yaml"
 
 with open(config["tissue_list"], 'r') as f:
     tissue_list = [line.strip() for line in f if line.strip()]

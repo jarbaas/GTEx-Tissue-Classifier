@@ -207,5 +207,13 @@ marimo/_lsp/
 __marimo__/
 
 # Datasets
-data/raw_gtex
-#data/simulated_data
+data/processed/
+!data/tissue_list.txt
+
+gtex_env/
+build/
+dist/
+*.egg-info/
+__pycache__/
+.pytest_cache/
+.snakemake/
