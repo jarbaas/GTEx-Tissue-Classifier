@@ -1,4 +1,4 @@
-tissue_list: "data/tissue_list.txt"
+tissue_list: "configs/tissue_list.txt"
 raw_dir: "data/raw_gtex"
 processed_dir: "data/processed"
 final_output: "data/processed/master_reference_matrix.csv"

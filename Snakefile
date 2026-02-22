@@ -8,6 +8,13 @@ with open(config["tissue_list"], 'r') as f:
 rule all:
     input: config["final_output"]
 
+rule download_data:
+    output:
+        expand(f"{config['raw_dir']}/{{tissue}}.gct.gz", tissue=TISSUES)
+    run:
+        from gtex_tissue_classifier.real_data import download_gtex_data
+        download_gtex_data(config["tissue_list"], config["raw_dir"])
+
 rule process_tissue:
     input:
         f"{config['raw_dir']}/{{tissue}}.gct.gz"
