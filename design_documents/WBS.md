@@ -35,19 +35,8 @@
 
 **Tasks:**
 
-1. Download the GCT files from  
-   https://gtexportal.org/home/downloads/adult-gtex/bulk_tissue_expression
-
-2. Write Python script to load GCT files into Pandas DataFrames  
-   * Files are in GCT format – need to install `cmapPy` library  
-   * Use `parse()` function on each file  
-   * Load each file into a DataFrame  
-   * Data structure: rows are genes, columns are samples
-
-3. Calculate TPM for each gene  
-   * Formula: `df["median_tpm"] = df.median(axis=1)`
-
-4. Combine all tissues into a single matrix
+- Write `download_gtex_data`, `parse_raw_gct`, `compute_TPM` functions
+- Design snakemake file to parallelize dowloading and compiling master GTEx tissue file
 
 
 ## Project: Develop Architecture - Module 1

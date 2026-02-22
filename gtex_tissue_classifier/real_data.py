@@ -42,11 +42,11 @@ def parse_raw_gct(filepath):
     
     Input: GTEx .gct file
             
-    Output: tissue_matrix: Datagrame with genes in rows, tissue samples in columns, and TPM values as entries.
+    Output: tissue_matrix: DataFrame with genes in rows, tissue samples in columns, and TPM values as entries.
     """
     tissue_matrix = pd.read_csv(filepath, sep='\t', skiprows=2)
     if 'Name' in tissue_matrix.columns:
-        tissue_matrix.drop(columns=['Name'], inplace=True)
+        tissue_matrix.set_index('Name', inplace=True)
     return tissue_matrix
 
 def compute_TPM(tissue_matrix):

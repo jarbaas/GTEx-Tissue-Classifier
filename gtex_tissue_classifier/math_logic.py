@@ -34,7 +34,7 @@ def rank_matches(corr_dict):
 
 def filter_variable_genes(df, n=2000):
     """
-    Filters the gene lists in the tissue dataframe to the top 2000 most variable, 
+    Filters the gene lists in the tissue DataFrame to the top 2000 most variable, 
     relying on unique genes to distinguish tissues.
     """
     vst_df = np.log2(df + 1)
