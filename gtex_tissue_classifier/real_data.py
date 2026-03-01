@@ -46,6 +46,8 @@ def parse_raw_gct(filepath):
     tissue_matrix = pd.read_csv(filepath, sep='\t', skiprows=2)
     if 'Name' in tissue_matrix.columns:
         tissue_matrix.set_index('Name', inplace=True)
+    if 'Description' in tissue_matrix.columns:
+        tissue_matrix.drop(columns=['Description'], inplace=True)
     return tissue_matrix
 
 def compute_TPM(tissue_matrix):
@@ -62,17 +64,3 @@ def compute_TPM(tissue_matrix):
     
     return tissue_matrix
 
-def build_db(file_list):
-    """
-    Runs through tissue GCT files, computes median TPM values, outputs 'gtex_reference.csv' database.
-    """
-    pass
-
-
-if __name__ == "__main__":
-    print("Starting the real_data module...")
-    
-
-    download_gtex_data('configs/tissue_list.txt')
-    
-    print("Module execution finished.")

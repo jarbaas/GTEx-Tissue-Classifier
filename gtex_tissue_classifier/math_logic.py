@@ -2,6 +2,17 @@
 import pandas as pd
 import numpy as np
 
+def filter_variable_genes(df, n=2000):
+    """
+    Filters the gene lists in the tissue DataFrame to the top 2000 most variable, 
+    relying on unique genes to distinguish tissues.
+    """
+    vst_df = np.log2(df + 1)
+    gene_variance = vst_df.var(axis=1)
+    top_genes = gene_variance.nlargest(n).index
+    filtered_df = df.loc[top_genes]
+    return filtered_df
+
 def calculate_spearman(sample_df, tissue_matrix):
     """
     Calculates Spearman correlation between sample_df and tissue columns in the tissue matrix.
@@ -32,13 +43,4 @@ def rank_matches(corr_dict):
     ranked_tissues = sorted(corr_dict.items(), key=lambda x: x[1], reverse=True)
     return ranked_tissues
 
-def filter_variable_genes(df, n=2000):
-    """
-    Filters the gene lists in the tissue DataFrame to the top 2000 most variable, 
-    relying on unique genes to distinguish tissues.
-    """
-    vst_df = np.log2(df + 1)
-    gene_variance = vst_df.var(axis=1)
-    top_genes = gene_variance.nlargest(n).index
-    filtered_df = df.loc[top_genes]
-    return filtered_df
+

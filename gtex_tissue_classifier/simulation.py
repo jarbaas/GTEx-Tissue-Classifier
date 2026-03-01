@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 
-def generate_mock_tissues(filename, num_genes=100, num_tissues=5):
+def generate_mock_tissues(filename, num_genes=100, num_tissues=50):
     """
     Creates a reference matrix with representative gene TPM values in rows and example tissues in columns, for testing package functions.
     
