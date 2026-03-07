@@ -4,6 +4,32 @@ from .architecture import read_file_data, PROJECT_ROOT
 import pandas as pd
 import requests
 
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+def read_file_data(relative_filepath):
+    """
+    Reads the data from a text file and returns it as a list of lines.
+
+    Args:
+        relative_filepath: str, path to text file relative to PROJECT_ROOT.
+    
+    Input: Text file with containing data written one entry per line.
+
+    Output: Stripped list of lines from file. Empty list is returned if file is not found or an error occurs.
+    """
+    absolute_path = os.path.join(PROJECT_ROOT, relative_filepath)
+
+    try:
+        with open(absolute_path, 'r') as file:
+            data = [line.strip() for line in file if line.strip()]
+        return data
+    except FileNotFoundError:
+        print(f"Error: The file '{absolute_path}' was not found.")
+        return []
+    except Exception as e:
+        print(f"An error occurred while reading the file: {e}")
+        return []
+
 def download_gtex_data(tissue_filepath, output_dir):
     """
     Downloads .gct files for all tissues from the GTEx portal. Designate tissue list location in simple filepath argument, eg. /configs/tissue_list.txt.
@@ -57,10 +83,21 @@ def compute_TPM(tissue_matrix):
     Args:
         tissue_matrix: DataFrame, with genes in rows, tissue samples in columns, and TPM values as entries.
 
-    Ouptput: tissue_matrix with 'Median_TPM' column added.
+    Output: tissue_matrix with 'Median_TPM' column added.
     """
     sample_cols = [col for col in tissue_matrix.columns if col.startswith("GTEX-")]
     tissue_matrix['Median_TPM'] = tissue_matrix[sample_cols].median(axis=1, skipna=True)
     
     return tissue_matrix
 
+def extract_gene_mapping(filepath):
+    """
+    Extracts dictionary mapping Ensembl ID to gene symbol.
+
+    Args:
+        filepath: location of the .gct GTEx reference file.
+    
+    Output: dict mapping Ensembl ID to gene symbol. 
+    """
+    df = pd.read_csv(filepath, sep='\t', skiprows=2, usecols=['Name', 'Description'])
+    return dict(zip(df['Name'], df['Description']))

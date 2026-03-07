@@ -10,7 +10,16 @@
 - Deliverable:
   * Mock .CSV file representing sample data and .GCT file representing input files. 
 - Completion:
-  * Correctly formatted files present in `data\simulated_data`
+  - [X] * Correctly formatted files present in `data\simulated_data`
+
+UPDATE 2/25:
+- Task:
+  * Update simulation to produce sample data based on GTEx master document instead of random numbers
+- Deliverable:
+  * Simulated sample and tissue files in `data\simulated_data`
+- Completion:
+  * Files correctly match data distribution of GTEx reference file. 
+
 
 **Sub action: Test loading and preparation of GTEx data**
 
