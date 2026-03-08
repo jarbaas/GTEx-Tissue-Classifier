@@ -7,12 +7,16 @@ Final validation of the tool will be performed on tissue-level data from the GTE
 * Source version: Dataset will be sourced from GTEx Analysis V11. From website, "GTEx V11 updates the GTEx V10 data to use GENCODE 47 annotation. It contains no new samples or donors compared to V10."
 * Data format: .GCT. This is a tab-delimited format for gene expression data. 
 * Data structure: A GCT file is a matrix containing sample metadata and gene metadata, as well as their respective IDs. Genes are placed into the rows, and samples are placed into the columns. The TPM values reside in a data matrix at the interesection of the two heading groups. 
-* Data size: Files for each tissue type range between 1 Mb and 100 Mb. Total expected size of all files is expected to be near 2.5 Gb. Given the median of samples will be determined for each tissue type, it is expected that a condensed file for all tissue types can be generated to be uploaded with the package.  
-* Data subset: In order to test GTex-Tissue-Classifier during development, a smaller, simulated dataset will be employed. Specifically, using numpy, an example .GCT file will be generated containing 100 gene rows and 5 different samples. Importantly, the gene expression concentration will vary between tissues, such that example tissue A will have a subset of genes that are higher concentration than tissue B, to mimic the gene expression of actual tissues. Furthermore, simulated gene expression data from input samples will also be generated for testing input/cleaning features. 
+* Data size: Files for each tissue type range between 1 Mb and 100 Mb. Total expected size of all files is expected to be near 2.5 Gb. Given the median of samples will be determined for each tissue type, it is expected that a condensed file for all tissue types will be generated to be uploaded with the package. 
+* GTEx reference database: A Snakemake pipeline `Snakefile` located in main directory is used to generate a condensed datasheet packaged with the tool. `\data\master_reference_matrix.csv` contains the GTEx reference file with dimensions 74269 x 68. Each row corresponds to a gene in Ensembl ID notation and each column corresponds to the median TPM value of the row gene's expression in the designated tissue. This 25Mb file is expected to be packaged with the tool.      
+* Example dataset for using the tool: In order to test GTex-Tissue-Classifier during development, a smaller, simulated dataset will be employed. Specifically, using numpy, an example .GCT file will be generated containing 100 gene rows and 5 different samples. Importantly, the gene expression concentration will vary between tissues, such that example tissue A will have a subset of genes that are higher concentration than tissue B, to mimic the gene expression of actual tissues. Furthermore, simulated gene expression data from input samples will also be generated for testing input/cleaning features.
+
+**Update 2/25**: The sample dataset will be improved based on the GTEx reference dataset. Given the original simulated datasets performed successfully, and the GTEx reference database has been succesfully built, the updated dataset will be generated to mimic the structure and distribution of the GTEx reference database file. 
+
 * Data statistics: Dataset calculations will be performed as follows:
 	1. Verification that TPMs per column sum to 1 million, to ensure proper TPM calculations from source.
 	1. Calculation of median TPMs for each tissue.
 	2. Variance calculations across tissues to isolate the 2000 most variable genes in each tissue, whcih will be used for identification. This removes uneeded genes that may weigh down the application. 
 
 
-AI use disclaimer: Google Gemini was consulted for advice on processing the GTEx data.
+AI use disclaimer: Google Gemini was consulted for advice on processing the GTEx data. All writing in this document is my own. 
