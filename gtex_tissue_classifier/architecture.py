@@ -1,6 +1,7 @@
 # Goal: Manage user inputs, choose between simulation vs real data runs, manages data flow between downstream modules.
 import os
 import pandas as pd
+from .config import PROJECT_ROOT, read_file_data
 from gtex_tissue_classifier import simulation, real_data, math_logic, visualization
 import argparse
 import sys
@@ -66,7 +67,7 @@ def main():
         print("Running in real mode. Input validation commencing.")
         
 
-        if not args.inputL
+        if not args.input:
             print("Error- no '--input' flag entered. This flag must be specified in real mode.")
             sys.exit(1)
         
@@ -139,7 +140,7 @@ def validate_normalization(df):
 
     Output: None, raises ValueError if TPM values are not valid.
     """
-    if df['TPM'].dtype not in [float, int]:
+    if not pd.api.types.is_numeric_dtype(df['TPM']):
         raise ValueError("TPM column must contain numeric values.")
     
     if (df['TPM'] < 0).any():
