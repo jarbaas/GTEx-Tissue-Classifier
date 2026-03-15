@@ -17,6 +17,15 @@ classifiers = [
 	"Operating System :: OS Independent",
 ]
 
+dependencies = [
+    "numpy",
+    "pandas",
+    "requests",
+    "matplotlib",
+    "seaborn",
+    "pyyaml"
+]
+
 [tool.setuptools]
 packages = ["gtex_tissue_classifier"]
 
