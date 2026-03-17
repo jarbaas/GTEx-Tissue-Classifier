@@ -5,11 +5,12 @@ class InputValidation:
     """
     Validates the integrity of GTEx-Tissue-Classifier input files, RNA-seq sample and GTEx reference matrix.
     """
-    def __init__(self, sample_df, reference_df):
+    def __init__(self, sample_df: pd.DataFrame, reference_df: pd.DataFrame, minimum_threshold: float = 0.20) -> None:
         self.sample_df = sample_df
         self.reference_df = reference_df
+        self.minimum_threshold = minimum_threshold
 
-    def check_numeric(self):
+    def check_numeric(self) -> None:
         """
         Checks that the TPM column contains only numeric values.
 
@@ -19,7 +20,7 @@ class InputValidation:
         if not pd.api.types.is_numeric_dtype(self.sample_df['TPM']):
             raise ValueError("TPM column must contain numeric values, not strings or characters.")
 
-    def check_positive_domain(self):
+    def check_positive_domain(self) -> None:
         """
         Checks that all TPM values are non-negative (>= 0).
 
@@ -30,7 +31,7 @@ class InputValidation:
         if n > 0:
             raise ValueError(f"TPM values cannot be negative. Found {n} negative values.")
 
-    def check_missing_values(self):
+    def check_missing_values(self) -> pd.DataFrame:
         """
         Checks for NaN or None in the TPM and Gene columns.
         Drops affected rows and prints a warning to stderr reporting how many were removed.
@@ -48,7 +49,7 @@ class InputValidation:
             self.sample_df = self.sample_df[~nan_mask].reset_index(drop=True)
         return self.sample_df
 
-    def check_gene_overlap(self, minimum_threshold=0.20):
+    def check_gene_overlap(self, minimum_threshold: float = 0.20) -> None:
         """
         Calculates the overlap in Ensembl IDs between the sample and GTEx reference matrix.
         Raises an error if the overlap ratio falls below minimum_threshold.
@@ -75,7 +76,7 @@ class InputValidation:
                 f"Check that Gene column contains valid Ensembl IDs."
             )
 
-    def run_all_validations(self):
+    def run_all_validations(self) -> pd.DataFrame:
         """
         Execute all checks in sequence.
         Execution stops at the first exception raised by a failing check.
