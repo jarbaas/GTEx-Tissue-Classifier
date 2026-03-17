@@ -3,9 +3,16 @@ import pandas as pd
 
 class InputValidation:
     """
-    Validates the integrity of GTEx-Tissue-Classifier input files, RNA-seq sample and GTEx reference matrix.
+    Validates the integrity of GTEx-Tissue-Classifier input files: RNA-seq sample and GTEx reference matrix.
     """
+
     def __init__(self, sample_df: pd.DataFrame, reference_df: pd.DataFrame, minimum_threshold: float = 0.20) -> None:
+        """
+        Args:
+            sample_df: DataFrame with 'Gene' and 'TPM' columns.
+            reference_df: GTEx reference matrix with gene IDs as index and tissue names as columns.
+            minimum_threshold: Minimum overlap fraction required between sample and reference genes (default 0.20).
+        """
         self.sample_df = sample_df
         self.reference_df = reference_df
         self.minimum_threshold = minimum_threshold
