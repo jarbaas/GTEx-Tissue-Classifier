@@ -49,26 +49,42 @@ class InputValidation:
         return self.sample_df
 
     def check_gene_overlap(self, minimum_threshold=0.20):
-        sample_genes = sample_df['Gene'].tolist()
-        reference_genes = reference_df.index.tolist()
-        sample_set = set(sample_genes)
-        reference_set = set(reference_genes)
+        """
+        Calculates the overlap in Ensembl IDs between the sample and GTEx reference matrix.
+        Raises an error if the overlap ratio falls below minimum_threshold.
 
-        # Calculate intersection of the two sets
+        Args:
+            minimum_threshold: float, minimum fraction of sample genes that must be
+                               present in the reference (default 0.20, i.e. 20%).
+
+        Raises:
+            ValueError: if the overlap ratio is below minimum_threshold, reporting
+                        the actual overlap percentage and the threshold.
+        """
+        sample_set = set(self.sample_df['Gene'])
+        reference_set = set(self.reference_df.index)
+
         matching_genes = sample_set.intersection(reference_set)
+        overlap_ratio = len(matching_genes) / len(sample_set)
 
-        # Calculate overlap of the two sets
-        overlap_ratio = length(matching_genes) / length(sample_set)
-        
-        # If overlap_ratio < minimum_threshold:
-            # Raise custom error like InsufficientOverlap
+        if overlap_ratio < minimum_threshold:
+            raise ValueError(
+                f"Insufficient gene overlap with GTEx reference: "
+                f"{overlap_ratio:.1%} of sample genes matched "
+                f"(minimum required: {minimum_threshold:.1%}). "
+                f"Check that Gene column contains valid Ensembl IDs."
+            )
 
     def run_all_validations(self):
         """
         Execute all checks in sequence.
+        Execution stops at the first exception raised by a failing check.
+
+        Returns:
+            pd.DataFrame: cleaned sample DataFrame (NaN rows removed if any).
         """
-        # check_numeric_values()
-        # check_positive_domain()
-        # check_missing_values()
-        # check_gene_overlap()
-        # Return True if all pass, otherwise execution stops when exceptions are reached.
+        self.check_numeric()
+        self.check_positive_domain()
+        self.check_missing_values()
+        self.check_gene_overlap()
+        return self.sample_df
