@@ -38,7 +38,7 @@ class InputValidation:
         if n > 0:
             raise ValueError(f"TPM values cannot be negative. Found {n} negative values.")
 
-    def check_missing_values(self) -> pd.DataFrame:
+    def check_missing_values(self) -> None:
         """
         Checks for NaN or None in the TPM and Gene columns.
         Drops affected rows and prints a warning to stderr reporting how many were removed.
@@ -54,9 +54,9 @@ class InputValidation:
                 file=sys.stderr,
             )
             self.sample_df = self.sample_df[~nan_mask].reset_index(drop=True)
-        return self.sample_df
+        
 
-    def check_gene_overlap(self, minimum_threshold: float = 0.20) -> None:
+    def check_gene_overlap(self) -> None:
         """
         Calculates the overlap in Ensembl IDs between the sample and GTEx reference matrix.
         Raises an error if the overlap ratio falls below minimum_threshold.
@@ -75,7 +75,7 @@ class InputValidation:
         matching_genes = sample_set.intersection(reference_set)
         overlap_ratio = len(matching_genes) / len(sample_set)
 
-        if overlap_ratio < minimum_threshold:
+        if overlap_ratio < self.minimum_threshold:
             raise ValueError(
                 f"Insufficient gene overlap with GTEx reference: "
                 f"{overlap_ratio:.1%} of sample genes matched "
