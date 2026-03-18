@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 
-def generate_mock_tissues(filename, num_genes=100, num_tissues=50):
+def generate_mock_tissues(filename: str, num_genes: int = 100, num_tissues: int = 50) -> None:
     """
     Creates a reference matrix with representative gene TPM values in rows and example tissues in columns, for testing package functions.
     
@@ -31,7 +31,7 @@ def generate_mock_tissues(filename, num_genes=100, num_tissues=50):
             f.write(row + values + "\n")
     print(f"Sample tissue matrix created at {filename}")
 
-def generate_mock_sample(filename, num_genes=100):
+def generate_mock_sample(filename: str, num_genes: int = 100) -> None:
     """
     Creates an unknown sample matrix with representative genes in rows and TPM values in columns. Output is in CSV format. 
     
@@ -40,7 +40,7 @@ def generate_mock_sample(filename, num_genes=100):
         num_genes: int, number of genes to simulate.
     """
     genes = [f"ENSG00000{i}" for i in range(num_genes)]
-    tpm_vals = np.random.lognormal(mean=-1, sigma=1, size=num_genes) # Mean and sigma can be adjusted to modify TPM distribution
+    tpm_vals = np.random.lognormal(mean=-1, sigma=1, size=num_genes) # Mean and sigma can be adjusted to modify TPM distribution 
     df = pd.DataFrame({'Gene': genes, 'TPM': tpm_vals})
     df.to_csv(filename, index=False)
     print(f"Mock sample created and saved to {filename}")

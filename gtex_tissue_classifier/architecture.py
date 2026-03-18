@@ -3,12 +3,13 @@ import os
 import pandas as pd
 from .config import PROJECT_ROOT, read_file_data
 from gtex_tissue_classifier import simulation, real_data, math_logic, visualization
+from gtex_tissue_classifier.validation import InputValidation
 import argparse
 import sys
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-def parse_arguments():
+def parse_arguments() -> argparse.Namespace:
     """
     Uses argparse to understand flags on data such as '--input', '--output', '--mode'.
     """
@@ -17,7 +18,7 @@ def parse_arguments():
         '-m', '--mode',
         choices=['real', 'simulated'],
         required=True,
-        help="Specify 'real' to being process with inputted user data or specify 'simulated' to run the tool with simulated sample data."
+        help="Specify 'real' to begin process with inputted user data or specify 'simulated' to run the tool with simulated sample data."
     )
     parser.add_argument(
         '-i', '--input',
@@ -38,7 +39,7 @@ def parse_arguments():
 
     return parser.parse_args()
 
-def main():
+def main() -> None:
     """
     Decides between running the tool on simulated data or real data.
     """
@@ -85,8 +86,11 @@ def main():
 
     print(f"Loading input sample from {sample_path}.")
     sample_df = load_input(sample_path)
-    validate_normalization(sample_df)
-
+    
+    print("Running input validation.")
+    validator = InputValidation(sample_df, gct_matrix)
+    sample_df = validator.run_all_validations()
+    
     print("Calculating Spearman correlations.")
     corr_dict = math_logic.calculate_spearman(sample_df, gct_matrix)
 
@@ -105,7 +109,7 @@ def main():
 
     print(f"Tissues successfully ranked. Top match is {top_tissue}. Results written to {args.output}.")
 
-def load_input(filepath):
+def load_input(filepath: str) -> pd.DataFrame:
     """
     Reads users CSV file, validates existence of "Gene" and "TPM" columns, returns Pandas DF. Note that the Gene column should contain Ensembl IDs in the format "ENSG00000X".
 
@@ -129,26 +133,7 @@ def load_input(filepath):
         missing = required_cols - set(sample_df.columns)
         raise ValueError(f"Input file missing required columns: {missing}")
 
-    return sample_df
+    return sample_df    
 
-def validate_normalization(df):
-    """
-    Ensures input sample is TPM normalized and raises error if raw counts are detected.
-
-    Args:
-        df: Dataframe with "Gene" and "TPM" columns.
-
-    Output: None, raises ValueError if TPM values are not valid.
-    """
-    if not pd.api.types.is_numeric_dtype(df['TPM']):
-        raise ValueError("TPM column must contain numeric values.")
-    
-    if (df['TPM'] < 0).any():
-        raise ValueError("TPM values cannot be negative.")
-    
-    if (df['TPM'] > 1e6).any():
-        raise ValueError("TPM values seem high, please check input data.")
-    
-
-#if __name__ == "__main__":
-    #main()    
+if __name__ == "__main__":
+    main()    

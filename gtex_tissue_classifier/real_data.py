@@ -5,7 +5,7 @@ import pandas as pd
 import requests
 from .config import PROJECT_ROOT, read_file_data
 
-def download_gtex_data(tissue_filepath, output_dir):
+def download_gtex_data(tissue_filepath: str, output_dir: str) -> None:
     """
     Downloads .gct files for all tissues from the GTEx portal. Designate tissue list location in simple filepath argument, eg. /configs/tissue_list.txt.
 
@@ -33,7 +33,7 @@ def download_gtex_data(tissue_filepath, output_dir):
     print("Download complete.")
 
 
-def parse_raw_gct(filepath):
+def parse_raw_gct(filepath: str) -> pd.DataFrame:
     """
     Parses a GTEx .gct file and returns DataFrame with genes in rows, tissues in columns, and TPM values as entries. 
 
@@ -51,7 +51,7 @@ def parse_raw_gct(filepath):
         tissue_matrix.drop(columns=['Description'], inplace=True)
     return tissue_matrix
 
-def compute_TPM(tissue_matrix):
+def compute_TPM(tissue_matrix: pd.DataFrame) -> pd.DataFrame:
     """
     Calculates median TPM column for tissues in tissue matrix.
 
@@ -65,7 +65,7 @@ def compute_TPM(tissue_matrix):
     
     return tissue_matrix
 
-def extract_gene_mapping(filepath):
+def extract_gene_mapping(filepath: str) -> dict[str, str]:
     """
     Extracts dictionary mapping Ensembl ID to gene symbol.
 
