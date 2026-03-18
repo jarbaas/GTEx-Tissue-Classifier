@@ -24,6 +24,16 @@ In instances where there are not enough genes present to make a prediction or th
 ## Data Sources
 This tool uses data processed from the V11 Release of the [adult GTEx portal](https://gtexportal.org/home/aboutAdultGtex). 
 
+### Example data:
+
+In order to test GTex-Tissue-Classifier during development, a smaller, simulated dataset will be employed. Specifically, using numpy, an example .GCT file will be generated containing 100 gene rows and 5 different samples. Importantly, the gene expression concentration will vary between tissues, such that example tissue A will have a subset of genes that are higher concentration than tissue B, to mimic the gene expression of actual tissues. Furthermore, simulated gene expression data from input samples will also be generated for testing input/cleaning features.
+
+The sample dataset will be improved based on the GTEx reference dataset. Given the original simulated datasets performed successfully, and the GTEx reference database has been succesfully built, the updated dataset will be generated to mimic the structure and distribution of the GTEx reference database file.
+
+## Tutorial
+
+For a step-by-step overview of how the input files are read, processed, and analyzed, please see the Jupyter Notebook located in `tutorials`. The tutorial notebook is currently designed to generate sample input data for you for demonstration purposes. 
+
 ## Limitations
 - The GTEx database is built from healthy tissues. Inputting canceerous or diseased samples may result in lower correlation scores due to disease-specific gene dysregulation. 
 - Single-cell RNA sequencing data may require pseudobulking before it will be accepted as input.
