@@ -24,7 +24,7 @@
 
 **Sub action: Update docstrings**
 - Tasks:
-  * [] Add type hints to functions to specify input format of arguments
+  * [X] Add type hints to functions to specify input format of arguments
   * [] Edit docstrings to correctly describe functions and I/O parameters.
 - Deliverable:
   * Type hints included in function. 
@@ -129,7 +129,7 @@ UPDATE 2/25:
 **Sub action: Validate structure of input files**
 
 - Tasks:  
-  * [] `validate_normalization()` function to check if TPMs have been properly normalized  
+  * [X] `validate_normalization()` function to check if TPMs have been properly normalized  
   * Each column in RNA-seq input CSV should sum to 1,000,000
 - Deliverable:  
   * Code should raise error if raw counts are inputted
