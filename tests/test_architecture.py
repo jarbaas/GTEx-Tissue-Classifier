@@ -2,7 +2,12 @@ import unittest
 import os
 import pandas as pd
 import numpy as np
-from gtex_tissue_classifier.architecture import load_input, validate_normalization, read_file_data
+from gtex_tissue_classifier.architecture import (
+    load_input,
+    validate_normalization,
+    read_file_data,
+)
+
 
 class TestArchitecture(unittest.TestCase):
 
@@ -17,28 +22,31 @@ class TestArchitecture(unittest.TestCase):
         self.text_list_file = "test_list_data.txt"
 
         # 2. Create a VALID input CSV
-        df_valid = pd.DataFrame({
-            'Gene': ['ENSG01', 'ENSG02', 'ENSG03'],
-            'TPM': [10.5, 0.0, 100.2]
-        })
+        df_valid = pd.DataFrame(
+            {"Gene": ["ENSG01", "ENSG02", "ENSG03"], "TPM": [10.5, 0.0, 100.2]}
+        )
         df_valid.to_csv(self.valid_csv, index=False)
 
         # 3. Create an INVALID CSV (Missing 'TPM' column)
-        df_missing = pd.DataFrame({
-            'Gene': ['ENSG01', 'ENSG02'],
-            'Count': [10, 20] # Wrong column name
-        })
+        df_missing = pd.DataFrame(
+            {"Gene": ["ENSG01", "ENSG02"], "Count": [10, 20]}  # Wrong column name
+        )
         df_missing.to_csv(self.missing_col_csv, index=False)
-        
+
         # 4. Create a Text File for read_file_data
-        with open(self.text_list_file, 'w') as f:
+        with open(self.text_list_file, "w") as f:
             f.write("Line 1\nLine 2\nLine 3")
 
     def tearDown(self):
         """
         Runs after EACH test. Cleans up the temporary files.
         """
-        for f in [self.valid_csv, self.missing_col_csv, self.bad_format_csv, self.text_list_file]:
+        for f in [
+            self.valid_csv,
+            self.missing_col_csv,
+            self.bad_format_csv,
+            self.text_list_file,
+        ]:
             if os.path.exists(f):
                 os.remove(f)
 
@@ -50,8 +58,8 @@ class TestArchitecture(unittest.TestCase):
         df = load_input(self.valid_csv)
         self.assertIsInstance(df, pd.DataFrame)
         self.assertEqual(len(df), 3)
-        self.assertIn('Gene', df.columns)
-        self.assertIn('TPM', df.columns)
+        self.assertIn("Gene", df.columns)
+        self.assertIn("TPM", df.columns)
 
     def test_load_input_file_not_found(self):
         """Should raise FileNotFoundError if path does not exist."""
@@ -70,8 +78,8 @@ class TestArchitecture(unittest.TestCase):
     def test_validate_normalization_success(self):
         """Should return True (or pass) for valid non-negative floats."""
         # Create a clean DF
-        df = pd.DataFrame({'Gene': ['A', 'B'], 'TPM': [10.0, 0.5]})
-        
+        df = pd.DataFrame({"Gene": ["A", "B"], "TPM": [10.0, 0.5]})
+
         # Assuming function returns True on success or simply doesn't raise
         try:
             result = validate_normalization(df)
@@ -83,16 +91,16 @@ class TestArchitecture(unittest.TestCase):
 
     def test_validate_normalization_negative_values(self):
         """Should raise ValueError for negative TPMs (biologically impossible)."""
-        df = pd.DataFrame({'Gene': ['A', 'B'], 'TPM': [10.0, -5.0]})
-        
+        df = pd.DataFrame({"Gene": ["A", "B"], "TPM": [10.0, -5.0]})
+
         with self.assertRaises(ValueError):
             validate_normalization(df)
 
     def test_validate_normalization_non_numeric(self):
         """Should raise Error if TPM column contains strings."""
-        df = pd.DataFrame({'Gene': ['A', 'B'], 'TPM': [10.0, "High"]})
-        
-        with self.assertRaises(Exception): # ValueError or TypeError
+        df = pd.DataFrame({"Gene": ["A", "B"], "TPM": [10.0, "High"]})
+
+        with self.assertRaises(Exception):  # ValueError or TypeError
             validate_normalization(df)
 
     # ==========================================
@@ -101,7 +109,7 @@ class TestArchitecture(unittest.TestCase):
     def test_read_file_data_content(self):
         """Should correctly read lines into a list."""
         result_list = read_file_data(self.text_list_file)
-        
+
         self.assertIsInstance(result_list, list)
         self.assertEqual(len(result_list), 3)
         self.assertEqual(result_list[0].strip(), "Line 1")
@@ -112,7 +120,8 @@ class TestArchitecture(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             read_file_data("ghost_text_file.txt")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()
 
-# Unit test adapted from prompt to Google Gemini describing the input/output of respective functions. 
+# Unit test adapted from prompt to Google Gemini describing the input/output of respective functions.

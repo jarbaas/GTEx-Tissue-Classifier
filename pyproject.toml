@@ -23,7 +23,7 @@ dependencies = [
     "requests",
     "matplotlib",
     "seaborn",
-    "scipy"
+    "scipy",
     "pyyaml"
 ]
 

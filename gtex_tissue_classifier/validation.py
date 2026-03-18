@@ -1,12 +1,18 @@
 import sys
 import pandas as pd
 
+
 class InputValidation:
     """
     Validates the integrity of GTEx-Tissue-Classifier input files: RNA-seq sample and GTEx reference matrix.
     """
 
-    def __init__(self, sample_df: pd.DataFrame, reference_df: pd.DataFrame, minimum_threshold: float = 0.20) -> None:
+    def __init__(
+        self,
+        sample_df: pd.DataFrame,
+        reference_df: pd.DataFrame,
+        minimum_threshold: float = 0.20,
+    ) -> None:
         """
         Args:
             sample_df: DataFrame with 'Gene' and 'TPM' columns.
@@ -24,8 +30,10 @@ class InputValidation:
         Raises:
             ValueError: if TPM column dtype is not numeric.
         """
-        if not pd.api.types.is_numeric_dtype(self.sample_df['TPM']):
-            raise ValueError("TPM column must contain numeric values, not strings or characters.")
+        if not pd.api.types.is_numeric_dtype(self.sample_df["TPM"]):
+            raise ValueError(
+                "TPM column must contain numeric values, not strings or characters."
+            )
 
     def check_positive_domain(self) -> None:
         """
@@ -34,9 +42,11 @@ class InputValidation:
         Raises:
             ValueError: if any TPM value is negative, reporting the count.
         """
-        n = (self.sample_df['TPM'] < 0).sum()
+        n = (self.sample_df["TPM"] < 0).sum()
         if n > 0:
-            raise ValueError(f"TPM values cannot be negative. Found {n} negative values.")
+            raise ValueError(
+                f"TPM values cannot be negative. Found {n} negative values."
+            )
 
     def check_missing_values(self) -> None:
         """
@@ -46,7 +56,7 @@ class InputValidation:
         Returns:
             pd.DataFrame: cleaned DataFrame with NaN rows removed.
         """
-        nan_mask = self.sample_df['TPM'].isna() | self.sample_df['Gene'].isna()
+        nan_mask = self.sample_df["TPM"].isna() | self.sample_df["Gene"].isna()
         n = nan_mask.sum()
         if n > 0:
             print(
@@ -54,7 +64,6 @@ class InputValidation:
                 file=sys.stderr,
             )
             self.sample_df = self.sample_df[~nan_mask].reset_index(drop=True)
-        
 
     def check_gene_overlap(self) -> None:
         """
@@ -69,7 +78,7 @@ class InputValidation:
             ValueError: if the overlap ratio is below minimum_threshold, reporting
                         the actual overlap percentage and the threshold.
         """
-        sample_set = set(self.sample_df['Gene'])
+        sample_set = set(self.sample_df["Gene"])
         reference_set = set(self.reference_df.index)
 
         matching_genes = sample_set.intersection(reference_set)
