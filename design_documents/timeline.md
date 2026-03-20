@@ -7,12 +7,12 @@
 	- [X] Implement happy path and run on simulated data 
 	- [X] Create `tutorial.ipynb` notebook to demonstrate happy path
 		- [X] Move to tutorials folder
-	- [X] Add reference to example data and tutorial 
+		- [X] Add reference to example data and tutorial in README
 	- [X] Implement issue assigned by teammate on their project
 	- [X] Create a pull request to merge changes with their branch
 	- [X] Review teammate's pull request on my project
 - Ongoing:
-	- [] Update simulated data description and function to reflect GTEX master file
+	- [X] Update simulated data description and function to reflect GTEX master file
 	- [] Finish writing output functions in visualization
 	- [] Run happy path on real data
 	- [] Derive accuracy score from multiple runs on real RNA sequencing samples
