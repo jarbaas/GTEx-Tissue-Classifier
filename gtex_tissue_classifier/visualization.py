@@ -1,4 +1,5 @@
 # Goal: Converts the mathematical outputs in math module into graphs and images
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -20,7 +21,7 @@ def plot_correlations(
     plt.ylabel("Tissue Type")
     plt.tight_layout()
     plt.gca().invert_yaxis()
-    plt.savefig(f"{output_path}/tissue_rankings.png", dpi=300)
+    plt.savefig(os.path.join(output_path, "tissue_rankings.png"), dpi=300)
     plt.close()
 
 
@@ -49,7 +50,10 @@ def plot_marker_heatmap(
     heatmap_normalized = heatmap_df.apply(np.log1p)
 
     if gene_mapping:
-        heatmap_normalized.index = heatmap_normalized.index.map(gene_mapping).fillna(heatmap_normalized.index)  # type: ignore
+        # dictionary keys need to be stripped like we did for gtex inputs
+        clean_mapping = {str(k).split('.')[0]: v for k, v in gene_mapping.items()}
+        # map symbols or leave as ensembl ID if mapping not found
+        heatmap_normalized.index = heatmap_normalized.index.map(lambda x: clean_mapping.get(x, x))
 
     plt.figure(figsize=(10, 8))
     sns.heatmap(heatmap_normalized, annot=True, cmap="viridis", fmt=".1f")
@@ -57,12 +61,71 @@ def plot_marker_heatmap(
     plt.xlabel("Data Source")
     plt.title(f"Top 50 Marker Gene Expression, Sample v {top_tissue}")
     plt.tight_layout()
-    plt.savefig(f"{output_path}/top_marker_heatmap.png", dpi=300)
+    plt.savefig(os.path.join(output_path, "tissue_rankings.png"), dpi=300)
     plt.close()
 
 
-def write_summary_report(results, filename):
+def write_summary_report(results: list[tuple[str, float]], filename: str) -> None:
     """
     Outputs the final tissue prediction, confidence score and/or any warnings into an html file.
+
+    Args:
+        results: A sorted list of tuples from rank_matches containing (tissue_name, correlation_score).
+        filename: The complete output filepath for the HTML file.
     """
-    pass
+    if not results:
+        raise ValueError("No matching tissues, unable to generate report.")
+
+    # Extract report data from results
+    top_tissue = results[0][0]
+    confidence = results[0][1]
+    top_5 = results[:5]
+
+    # Build HTML document 
+    html_content = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>GTEx-Tissue-Classifier Report</title>
+        <style>
+            body {{ font-family: Arial, sans-serif; margin: 40px; color: #333; }}
+            h1 {{ color: #2c3e50; }}
+            .highlight {{ color: #27ae60; font-weight: bold; }}
+            table {{ border-collapse: collapse; width: 50%; margin-top: 20px; }}
+            th, td {{ border: 1px solid #dddddd; padding: 10px; text-align: left; }}
+            th {{ background-color: #f8f9fa; }}
+        </style>
+    </head>
+    <body>
+        <h1>Tissue Match Summary</h1>
+        <p>The highest correlating tissue match is: <span class="highlight">{top_tissue}</span></p>
+        <p>Spearman Correlation Score: <strong>{confidence:.4f}</strong></p>
+
+        <h2>Top 5 Closest Matches</h2>
+        <table>
+            <tr>
+                <th>Tissue</th>
+                <th>Spearman Score</th>
+            </tr>
+    """
+
+    # Generate a top 5 table for report
+    for tissue, score in top_5:
+        html_content += f"""
+            <tr>
+                <td>{tissue}</td>
+                <td>{score:.4f}</td>
+            </tr>
+        """
+
+    # Close the report
+    html_content += """
+        </table>
+    </body>
+    </html>
+    """
+
+    # Save to specified path
+    with open(filename, 'w') as file:
+        file.write(html_content)
+    

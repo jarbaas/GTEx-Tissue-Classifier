@@ -219,3 +219,5 @@ __pycache__/
 tutorials/sample_gtex.gct
 tutorials/sample_tissues.csv
 tutorials/tissue_rankings.png
+data/test_data
+test_data

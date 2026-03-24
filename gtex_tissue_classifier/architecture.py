@@ -1,12 +1,12 @@
 # Goal: Manage user inputs, choose between simulation vs real data runs, manages data flow between downstream modules.
 import os
 import pandas as pd
-from .config import PROJECT_ROOT, read_file_data
+from gtex_tissue_classifier.config import PROJECT_ROOT, read_file_data
 from gtex_tissue_classifier import simulation, real_data, math_logic, visualization
 from gtex_tissue_classifier.validation import InputValidation
 import argparse
 import sys
-
+import json
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -35,6 +35,13 @@ def parse_arguments() -> argparse.Namespace:
         "--reference",
         type=str,
         help="Optional filepath to custom reference matrix, otherwise defaults to bundled GTEx reference .gct file.",
+    )
+    parser.add_argument(
+        "-n",
+        "--num-genes",
+        type=int,
+        default=2000,
+        help="Filters the GTEx reference file to keep n highly variable genes, 2000 by default.",
     )
     parser.add_argument(
         "-o",
@@ -86,21 +93,37 @@ def main() -> None:
 
         if not ref_path:
             ref_path = os.path.join(
-                PROJECT_ROOT, "data", "processed", "master_reference_matrix.csv"
+                PROJECT_ROOT, "data", "master_reference_matrix.csv"
             )
             print("No custom GTEx reference file provided. Defaulting to bundled file.")
 
-        gene_map = real_data.extract_gene_mapping(ref_path)
-
     print(f"Loading reference GTEx matrix from {ref_path}.")
-    gct_matrix = real_data.parse_raw_gct(ref_path)
+    
+    if ref_path.endswith('.csv'):
+        gct_matrix = pd.read_csv(ref_path, index_col=0)
+        mapping_path = os.path.join(PROJECT_ROOT, "data", "gene_mapping.json")
+        try:
+            with open(mapping_path, "r") as f:
+                gene_map = json.load(f)
+        except FileNotFoundError:
+            print("Warning! gene_mapping.json not found. Heatmap defaulting to Ensembl IDs.")
+    else:
+        gct_matrix = real_data.parse_raw_gct(ref_path)
+        gene_map = real_data.extract_gene_mapping(ref_path)
 
     print(f"Loading input sample from {sample_path}.")
     sample_df = load_input(sample_path)
 
-    print("Running input validation.")
+    # Removes any trailing periods after Ensembl ID that databases use to indicate version number
+    gct_matrix.index = gct_matrix.index.astype(str).str.split('.').str[0]
+    sample_df['Gene'] = sample_df['Gene'].astype(str).str.split('.').str[0]
+
+    print("Running input validation on full matrix")
     validator = InputValidation(sample_df, gct_matrix)
     sample_df = validator.run_all_validations()
+
+    print(f"Filtering reference matrix to top {args.num_genes} variable genes.")
+    gct_matrix = math_logic.filter_variable_genes(gct_matrix, n=args.num_genes)
 
     print("Calculating Spearman correlations.")
     corr_dict = math_logic.calculate_spearman(sample_df, gct_matrix)
@@ -113,6 +136,9 @@ def main() -> None:
     visualization.plot_marker_heatmap(
         sample_df, gct_matrix, top_tissue, args.output, gene_mapping=gene_map
     )
+
+    report_path = os.path.join(args.output, "summary_report.html")
+    visualization.write_summary_report(ranked_tissues, report_path)
 
     print(
         f"Tissues successfully ranked. Top match is {top_tissue}. Results written to {args.output}."

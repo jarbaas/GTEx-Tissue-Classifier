@@ -11,13 +11,13 @@ class InputValidation:
         self,
         sample_df: pd.DataFrame,
         reference_df: pd.DataFrame,
-        minimum_threshold: float = 0.20,
+        minimum_threshold: float = 0.05,
     ) -> None:
         """
         Args:
             sample_df: DataFrame with 'Gene' and 'TPM' columns.
             reference_df: GTEx reference matrix with gene IDs as index and tissue names as columns.
-            minimum_threshold: Minimum overlap fraction required between sample and reference genes (default 0.20).
+            minimum_threshold: Minimum overlap fraction required between sample and reference genes (default 0.05).
         """
         self.sample_df = sample_df
         self.reference_df = reference_df
@@ -88,7 +88,7 @@ class InputValidation:
             raise ValueError(
                 f"Insufficient gene overlap with GTEx reference: "
                 f"{overlap_ratio:.1%} of sample genes matched "
-                f"(minimum required: {minimum_threshold:.1%}). "
+                f"(minimum required: {self.minimum_threshold:.1%}). "
                 f"Check that Gene column contains valid Ensembl IDs."
             )
 

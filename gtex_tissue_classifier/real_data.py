@@ -1,9 +1,8 @@
 # Goal: Handles extraction, transformation and loading of raw GTEx source files. Used to build database for the full tool.
 import os
-from .architecture import read_file_data, PROJECT_ROOT
 import pandas as pd
 import requests
-from .config import PROJECT_ROOT, read_file_data
+from gtex_tissue_classifier.config import PROJECT_ROOT, read_file_data
 
 
 def download_gtex_data(tissue_filepath: str, output_dir: str) -> None:
