@@ -13,7 +13,7 @@
 	- [X] Review teammate's pull request on my project
 - Ongoing:
 	- [X] Update simulated data description and function to reflect GTEX master file
-	- [] Finish writing output functions in visualization
+	- [X] Finish writing output functions in visualization
 	- [] Run happy path on real data
 	- [] Derive accuracy score from multiple runs on real RNA sequencing samples
 	- [] Milestones 6 and 7 (DDS)
