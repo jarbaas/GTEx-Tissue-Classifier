@@ -50,13 +50,14 @@ def plot_marker_heatmap(
     heatmap_normalized = heatmap_df.apply(np.log1p)
 
     if gene_mapping:
-        # dictionary keys need to be stripped like we did for gtex inputs
+        # dictionary keys need to be stripped like with gtex inputs
         clean_mapping = {str(k).split('.')[0]: v for k, v in gene_mapping.items()}
         # map symbols or leave as ensembl ID if mapping not found
         heatmap_normalized.index = heatmap_normalized.index.map(lambda x: clean_mapping.get(x, x))
 
-    plt.figure(figsize=(10, 8))
-    sns.heatmap(heatmap_normalized, annot=True, cmap="viridis", fmt=".1f")
+    plt.figure(figsize=(10, 12))
+    ax = sns.heatmap(heatmap_normalized, annot=True, cmap="viridis", fmt=".1f")
+    ax.set_yticklabels(ax.get_yticklabels(), rotation=0, va="center", fontsize=9)
     plt.ylabel("Marker Genes")
     plt.xlabel("Data Source")
     plt.title(f"Top 50 Marker Gene Expression, Sample v {top_tissue}")
