@@ -34,8 +34,8 @@
 ## Project: Create package demo and vignette
 
 - Tasks:
-  * [] Create project demo
-  * [] Create project vignette
+  * [X] Create project demo
+  * [X] Create project vignette
 - Deliverables:
   * Project vignette in `\tests`
   * Project demo in PowerPoint?
