@@ -54,5 +54,5 @@ pip install -e .
 For a step-by-step overview of how the input files are read, processed, and analyzed, please see the Jupyter Notebook located in `tutorials`. The tutorial notebook is currently designed to generate sample input data for you for demonstration purposes. 
 
 ## Limitations
-- The GTEx database is built from healthy tissues. Inputting canceerous or diseased samples may result in lower correlation scores due to disease-specific gene dysregulation. It is recommended before running the tool on diseased tissues to run multiple tests on known samples first to understand the classifier's accuracy in determining these types of tissues. 
+- The GTEx database is built from healthy tissues. Inputting cancerous or diseased samples may result in lower correlation scores due to disease-specific gene dysregulation. It is recommended before running the tool on diseased tissues to run multiple tests on known samples first to understand the classifier's accuracy in determining these types of tissues. 
 - Single-cell RNA sequencing data may require pseudobulking before it will be accepted as input.
