@@ -30,10 +30,29 @@ In order to test GTex-Tissue-Classifier during development, a smaller, simulated
 
 The sample dataset will be improved based on the GTEx reference dataset. Given the original simulated datasets performed successfully, and the GTEx reference database has been succesfully built, the updated dataset will be generated to mimic the structure and distribution of the GTEx reference database file.
 
+## Installation
+
+This tool is designed to run in a Linux or MacOS environment. For Windows, set up and run Windows Subsystem for Linux (WSL) instead of running commands on PowerShell. 
+```
+# Build the repository and navigate to it
+git clone https://github.com/jarbaas/GTEx-Tissue-Classifier
+cd GTEx-Tissue-Classifier
+
+# Create the conda environment with required package dependencies
+conda env create -f environment.yml
+
+# Activate the environment
+conda activate gtex-env
+
+# Install the package in editable mode
+pip install -e .
+
+```
+
 ## Tutorial
 
 For a step-by-step overview of how the input files are read, processed, and analyzed, please see the Jupyter Notebook located in `tutorials`. The tutorial notebook is currently designed to generate sample input data for you for demonstration purposes. 
 
 ## Limitations
-- The GTEx database is built from healthy tissues. Inputting canceerous or diseased samples may result in lower correlation scores due to disease-specific gene dysregulation. 
+- The GTEx database is built from healthy tissues. Inputting canceerous or diseased samples may result in lower correlation scores due to disease-specific gene dysregulation. It is recommended before running the tool on diseased tissues to run multiple tests on known samples first to understand the classifier's accuracy in determining these types of tissues. 
 - Single-cell RNA sequencing data may require pseudobulking before it will be accepted as input.
