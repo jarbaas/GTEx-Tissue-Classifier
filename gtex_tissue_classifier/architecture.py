@@ -3,7 +3,7 @@ import os
 import pandas as pd
 from gtex_tissue_classifier.config import PROJECT_ROOT, read_file_data
 from gtex_tissue_classifier import simulation, real_data, math_logic, visualization
-from gtex_tissue_classifier.validation import InputValidation
+from gtex_tissue_classifier.validation import InputValidation, validate_file_path, validate_output_directory
 import argparse
 import sys
 import json
@@ -61,9 +61,9 @@ def main() -> None:
     print("Package Installation Success")
 
     args = parse_arguments()
-
-    os.makedirs(args.output, exist_ok=True)
-
+    print(f"Validating output directory: {args.output}")
+    validate_output_directory(args.output)
+    
     gene_map = None
 
     # Simulation branch
@@ -98,7 +98,8 @@ def main() -> None:
             print("No custom GTEx reference file provided. Defaulting to bundled file.")
 
     print(f"Loading reference GTEx matrix from {ref_path}.")
-    
+    validate_file_path(ref_path, None)
+
     if ref_path.endswith('.csv'):
         gct_matrix = pd.read_csv(ref_path, index_col=0)
         mapping_path = os.path.join(PROJECT_ROOT, "data", "gene_mapping.json")
@@ -156,14 +157,9 @@ def load_input(filepath: str) -> pd.DataFrame:
 
     Output: Pandas DataFrame with gene names and TPM values.
     """
-    if not os.path.exists(filepath):
-        raise FileNotFoundError(f"The file '{filepath}' was not found.")
+    validate_file_path(filepath, expected_extension=".csv")
 
-    try:
-        sample_df = pd.read_csv(filepath)
-    except Exception as e:
-        raise ValueError(f"Failed to read CSV: {e}")
-
+    sample_df = pd.read_csv(filepath)
     required_cols = {"Gene", "TPM"}
     if not required_cols.issubset(sample_df.columns):
         missing = required_cols - set(sample_df.columns)

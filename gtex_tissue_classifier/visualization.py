@@ -11,6 +11,10 @@ def plot_correlations(
 ) -> None:
     """
     Uses matplotlib to generate a bar chart of the top five tissue matches.
+
+    Args:
+        ranked_tissues: list[tuple[str, float]], input list of tuples with top tissue matches and their spearman correlation values
+        output_path: str, location for correlation plots to be saved
     """
     top_5 = ranked_tissues[:5]
     tissues = [item[0] for item in top_5]
@@ -35,6 +39,13 @@ def plot_marker_heatmap(
     """
     Generates a heatmap comparing top markers of input samples to top markers
     defining the closest matching tissue.
+
+    Args:
+        sample_df: pd.DataFrame, DataFrame containing the input sample TPM values
+        gct_matrix: pd.DataFrame, DataFrame containing the GTEx reference TPM values
+        top_tissue: str, name of the top tissue match determined by the tool
+        output_path: str, location for marker heatmap to be saved
+        gene_mapping: dict[str, str] | None = None, dictionary of Ensembl ID to gene name mapping, or None if not provided
     """
     tissue_vector = gct_matrix[top_tissue].sort_values(ascending=False).head(50)
     sample_vector = sample_df.set_index("Gene")["TPM"]
