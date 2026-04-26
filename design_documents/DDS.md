@@ -1,5 +1,5 @@
 # Design Document Specification (DDS)
-Goal (from SRS): The goal of GTEx-Tissue-Classifier is to identify tissue origins of unknown RNA-seqsamples. The method for identifying tissues involves performing RNA sequencing of the sample, building a normalized list of TPM counts for gene expression, and input of this list into the command-line software. By comparing gene expression to the GTEx database, the tool will provide the user an output file containing the similarity scores for each tissue, including a most likely tissue type and a graph showing the top five tissue possibilities. 
+Goal (from SRS): The goal of GTEx-Tissue-Classifier is to identify tissue origins of unknown RNA-seq samples. The method for identifying tissues involves performing RNA sequencing of the sample, building a normalized list of TPM counts for gene expression, and input of this list into the command-line software. By comparing gene expression to the GTEx database, the tool will provide the user an output file containing the similarity scores for each tissue, including a most likely tissue type and a graph showing the top five tissue possibilities. 
 
  ## Objectives
  **Accuracy:** Gene expression correlation should have >95% accuracy in correctly identifying a tissue type. 
