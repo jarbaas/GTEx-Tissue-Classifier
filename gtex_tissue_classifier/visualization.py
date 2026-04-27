@@ -62,9 +62,11 @@ def plot_marker_heatmap(
 
     if gene_mapping:
         # dictionary keys need to be stripped like with gtex inputs
-        clean_mapping = {str(k).split('.')[0]: v for k, v in gene_mapping.items()}
+        clean_mapping = {str(k).split(".")[0]: v for k, v in gene_mapping.items()}
         # map symbols or leave as ensembl ID if mapping not found
-        heatmap_normalized.index = heatmap_normalized.index.map(lambda x: clean_mapping.get(x, x))
+        heatmap_normalized.index = heatmap_normalized.index.map(
+            lambda x: clean_mapping.get(x, x)
+        )
 
     plt.figure(figsize=(10, 12))
     ax = sns.heatmap(heatmap_normalized, annot=True, cmap="viridis", fmt=".1f")
@@ -93,7 +95,7 @@ def write_summary_report(results: list[tuple[str, float]], filename: str) -> Non
     confidence = results[0][1]
     top_5 = results[:5]
 
-    # Build HTML document 
+    # Build HTML document
     html_content = f"""
     <!DOCTYPE html>
     <html>
@@ -138,6 +140,5 @@ def write_summary_report(results: list[tuple[str, float]], filename: str) -> Non
     """
 
     # Save to specified path
-    with open(filename, 'w') as file:
+    with open(filename, "w") as file:
         file.write(html_content)
-    

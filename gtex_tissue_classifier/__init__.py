@@ -1,8 +1,9 @@
 """
 GTEx-Tissue-Classifier
-A bioinformatics tool for identifying the tissue of origin for RNA-seq samples 
+A bioinformatics tool for identifying the tissue of origin for RNA-seq samples
 based on the GTEx V11 Tissue Database.
 """
+
 __version__ = "1.0.0"
 __author__ = "Jared Baas"
 

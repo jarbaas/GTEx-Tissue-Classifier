@@ -2,6 +2,7 @@ import sys
 import pandas as pd
 import os
 
+
 class InputValidation:
     """
     Validates the integrity of GTEx-Tissue-Classifier input files: RNA-seq sample and GTEx reference matrix.
@@ -106,20 +107,26 @@ class InputValidation:
         self.check_gene_overlap()
         return self.sample_df
 
+
 # file validation functions
 def validate_file_path(filepath: str, expected_extension: str | None) -> None:
     """
     Validates file existence and optionally checks for correct file extension type.
 
-    Args: 
+    Args:
         filepath: str, filepath to be validated
         expected_extenstion: str, if included, anticipated filetype of input file
     """
     if not os.path.exists(filepath):
-        raise FileNotFoundError(f"Validation Error: The file '{filepath}' was not found.")
-    
+        raise FileNotFoundError(
+            f"Validation Error: The file '{filepath}' was not found."
+        )
+
     if expected_extension and not filepath.endswith(expected_extension):
-        raise ValueError(f"Validation Error: Expected a '{expected_extension}' file, but received '{filepath}'.")
+        raise ValueError(
+            f"Validation Error: Expected a '{expected_extension}' file, but received '{filepath}'."
+        )
+
 
 # output validation
 def validate_output_directory(filepath: str) -> None:
@@ -131,9 +138,11 @@ def validate_output_directory(filepath: str) -> None:
     """
     try:
         os.makedirs(filepath, exist_ok=True)
-        test_file = os.path.join(filepath, '.write_test')
-        with open(test_file, 'w') as f:
-            f.write('test')
+        test_file = os.path.join(filepath, ".write_test")
+        with open(test_file, "w") as f:
+            f.write("test")
         os.remove(test_file)
     except Exception as e:
-        raise PermissionError(f"Validation Error: Cannot write to output directory '{filepath}'. {str(e)}")
+        raise PermissionError(
+            f"Validation Error: Cannot write to output directory '{filepath}'. {str(e)}"
+        )

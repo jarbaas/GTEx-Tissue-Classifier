@@ -3,10 +3,15 @@ import os
 import pandas as pd
 from gtex_tissue_classifier.config import PROJECT_ROOT, read_file_data
 from gtex_tissue_classifier import simulation, real_data, math_logic, visualization
-from gtex_tissue_classifier.validation import InputValidation, validate_file_path, validate_output_directory
+from gtex_tissue_classifier.validation import (
+    InputValidation,
+    validate_file_path,
+    validate_output_directory,
+)
 import argparse
 import sys
 import json
+
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -63,7 +68,7 @@ def main() -> None:
     args = parse_arguments()
     print(f"Validating output directory: {args.output}")
     validate_output_directory(args.output)
-    
+
     gene_map = None
 
     # Simulation branch
@@ -92,22 +97,22 @@ def main() -> None:
         ref_path = args.reference
 
         if not ref_path:
-            ref_path = os.path.join(
-                PROJECT_ROOT, "data", "master_reference_matrix.csv"
-            )
+            ref_path = os.path.join(PROJECT_ROOT, "data", "master_reference_matrix.csv")
             print("No custom GTEx reference file provided. Defaulting to bundled file.")
 
     print(f"Loading reference GTEx matrix from {ref_path}.")
     validate_file_path(ref_path, None)
 
-    if ref_path.endswith('.csv'):
+    if ref_path.endswith(".csv"):
         gct_matrix = pd.read_csv(ref_path, index_col=0)
         mapping_path = os.path.join(PROJECT_ROOT, "data", "gene_mapping.json")
         try:
             with open(mapping_path, "r") as f:
                 gene_map = json.load(f)
         except FileNotFoundError:
-            print("Warning! gene_mapping.json not found. Heatmap defaulting to Ensembl IDs.")
+            print(
+                "Warning! gene_mapping.json not found. Heatmap defaulting to Ensembl IDs."
+            )
     else:
         gct_matrix = real_data.parse_raw_gct(ref_path)
         gene_map = real_data.extract_gene_mapping(ref_path)
@@ -116,8 +121,8 @@ def main() -> None:
     sample_df = load_input(sample_path)
 
     # Removes any trailing periods after Ensembl ID that databases use to indicate version number
-    gct_matrix.index = gct_matrix.index.astype(str).str.split('.').str[0]
-    sample_df['Gene'] = sample_df['Gene'].astype(str).str.split('.').str[0]
+    gct_matrix.index = gct_matrix.index.astype(str).str.split(".").str[0]
+    sample_df["Gene"] = sample_df["Gene"].astype(str).str.split(".").str[0]
 
     print("Running input validation on full matrix")
     validator = InputValidation(sample_df, gct_matrix)

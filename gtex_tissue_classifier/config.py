@@ -17,8 +17,8 @@ def read_file_data(relative_filepath: str) -> list:
     Output: Stripped list of lines from file. Empty list is returned if file is not found or an error occurs.
     """
     absolute_path = os.path.join(PROJECT_ROOT, relative_filepath)
-    
-    validate_file_path(absolute_path, None) 
+
+    validate_file_path(absolute_path, None)
 
     with open(absolute_path, "r") as file:
         data = [line.strip() for line in file if line.strip()]
