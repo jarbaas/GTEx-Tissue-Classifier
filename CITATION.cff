@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software in your research, please cite it as below."
+authors:
+  - family-names: "Baas"
+    given-names: "Jared D."
+    orcid: "https://orcid.org/0000-0002-4088-4977"
+title: "GTEx Tissue Classifier: A bioinformatics tool for predicting tissue origin from RNA-seq profiles"
+version: 1.0.0
+date-released: 2026-04-27
+url: "https://github.com/jarbaas/gtex-tissue-classifier"
+repository-code: "https://github.com/jarbaas/gtex-tissue-classifier"
+license: MIT
+keywords:
+  - bioinformatics
+  - rna-seq
+  - quality-control
+  - gtex
+  - python
