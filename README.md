@@ -2,7 +2,7 @@
 A bioinformatics tool to predict tissue origin from unknown RNA-seq profiles using GTEx reference data. Built with Python.
 
 ## Biological Question
-Sample identity is a cruical part of transcriptomics research. However, due to incorrect labeling of samples, loss of metadata, or cross-contaminiation, the tissue origins of particular samples may be missing. Furthermore, there are also forensic applications for the tracing of tissue origins in unknown samples. Provided the RNA sequencing of a given sample, can its tissue of origin be determined by comparing its gene expression signature to a human reference database?
+Sample identity is a crucial part of transcriptomics research. However, due to incorrect labeling of samples, loss of metadata, or cross-contamination, the tissue origins of particular samples may be missing. Furthermore, there are also forensic applications for the tracing of tissue origins in unknown samples. Provided the RNA sequencing of a given sample, can its tissue of origin be determined by comparing its gene expression signature to a human reference database?
 
 This tool utilizes the Genotype-Tissue Expression (GTEx) Portal, a database of tissue and cell-specific gene expression with samples spanning 54 non-diseased tissue sites across ~1000 adults. By deriving a similarity score between the unknown sample's expression profile and GTEx reference tissues, this tool will offer a statistical likelihood of its tissue identity. 
 
@@ -11,7 +11,7 @@ GTEx-Tissue-Classifier is a command-line Python utlity that takes TPM-normalized
 
 ## Input and output specifications
 ### Input
-The tool requires a TSV or CSV file containing processed RNA sequencing read quanitification that has been TPM normalized. The file requires a Gene column and TPM column, with the gene column accepting either symbols or Ensembl IDs. 
+The tool requires a TSV or CSV file containing processed RNA sequencing read quantification that has been TPM normalized. The file requires a Gene column and TPM column, with the gene column accepting either symbols or Ensembl IDs. 
 
 ### Output
 The tool will output a results folder with the following:
@@ -32,6 +32,21 @@ The sample dataset will be improved based on the GTEx reference dataset. Given t
 
 ## Installation
 
+### Option 1: Docker Installation
+```
+# Build the repository and navigate to it
+git clone https://github.com/jarbaas/GTEx-Tissue-Classifier
+cd GTEx-Tissue-Classifier
+
+# Build Docker image
+docker build -t gtex-classifier .
+
+# Run tool
+docker run -v $(pwd):/data gtex-classifier gtex-classifier --input /data/your_sample.csv --output /data/results_folder
+```
+
+
+### Option 2: Conda Install
 This tool is designed to run in a Linux or MacOS environment. For Windows, set up and run Windows Subsystem for Linux (WSL) instead of running commands on PowerShell. 
 ```
 # Build the repository and navigate to it
