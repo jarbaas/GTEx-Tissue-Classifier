@@ -9,7 +9,7 @@ This tool utilizes the Genotype-Tissue Expression (GTEx) Portal, a database of t
 ## Project Description
 GTEx-Tissue-Classifier is a command-line Python utlity that takes TPM-normalized, processed gene expression data and computes the similarity to a backend database of human tissue signatures. GTEx-Tissue-Classifier is novel in its approach to labeling samples by leveraging visuals and QC to enhance the interpretability of results. 
 
-**Update:** The tool has now been updated with a Graphical User Interface (GUI) hosted via a Streamlit web application, reducing the barrier to entry for wet-lab scientists. Simply upload the RNA sequencing sample file, choose desired number of highly-variable features, select an optional reference database, and run. The results will appear in the browser window as well as defined output location. 
+**Update:** The tool has now been updated with a Graphical User Interface (GUI) hosted via a Streamlit web application, reducing the barrier to entry for wet-lab scientists. Simply upload the RNA sequencing sample file, choose desired number of highly-variable features, select an optional reference database, and run. The results will appear in the browser window.
 
 ## Input and output specifications
 ### Input
