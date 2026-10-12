@@ -24,7 +24,8 @@ dependencies = [
     "matplotlib",
     "seaborn",
     "scipy",
-    "pyyaml"
+    "pyyaml",
+    "streamlit"
 ]
 
 [tool.setuptools]

@@ -33,7 +33,7 @@ def parse_arguments() -> argparse.Namespace:
         "-i",
         "--input",
         type=str,
-        help="Filepath to the CSV file containing the input RNA sequencing data. This argument is required in 'real'.",
+        help="Filepath to the CSV or TSV file containing the input RNA sequencing data. This argument is required in 'real'.",
     )
     parser.add_argument(
         "-r",
@@ -59,6 +59,87 @@ def parse_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def run_classifier(
+    sample_path: str,
+    reference_path: str | None = None,
+    num_genes: int = 2000,
+    output_path: str | None = None,
+) -> list[tuple[str, float]]:
+    """
+    Load sample and reference data, validate, score tissues, and optionally write CLI plots.
+
+    Args:
+        sample_path: Path to a CSV or TSV sample file with Gene and TPM columns.
+        reference_path: Optional custom GTEx reference matrix. Defaults to the bundled CSV.
+        num_genes: Number of highly variable genes to keep from the reference.
+        output_path: If provided, write bar chart, heatmap, and HTML report to this directory.
+
+    Returns:
+        Ranked list of (tissue_name, Spearman correlation) tuples, highest first.
+    """
+    gene_map = None
+
+    if not reference_path:
+        reference_path = os.path.join(
+            PROJECT_ROOT, "data", "master_reference_matrix.csv"
+        )
+        print("No custom GTEx reference file provided. Defaulting to bundled file.")
+
+    print(f"Loading reference GTEx matrix from {reference_path}.")
+    validate_file_path(reference_path, None)
+
+    if reference_path.endswith(".csv"):
+        gct_matrix = pd.read_csv(reference_path, index_col=0)
+        mapping_path = os.path.join(PROJECT_ROOT, "data", "gene_mapping.json")
+        try:
+            with open(mapping_path, "r") as f:
+                gene_map = json.load(f)
+        except FileNotFoundError:
+            print(
+                "Warning! gene_mapping.json not found. Heatmap defaulting to Ensembl IDs."
+            )
+    else:
+        gct_matrix = real_data.parse_raw_gct(reference_path)
+        gene_map = real_data.extract_gene_mapping(reference_path)
+
+    print(f"Loading input sample from {sample_path}.")
+    sample_df = load_input(sample_path)
+
+    # Removes any trailing periods after Ensembl ID that databases use to indicate version number
+    gct_matrix.index = gct_matrix.index.astype(str).str.split(".").str[0]
+    sample_df["Gene"] = sample_df["Gene"].astype(str).str.split(".").str[0]
+
+    print("Running input validation on full matrix")
+    validator = InputValidation(sample_df, gct_matrix)
+    sample_df = validator.run_all_validations()
+
+    print(f"Filtering reference matrix to top {num_genes} variable genes.")
+    gct_matrix = math_logic.filter_variable_genes(gct_matrix, n=num_genes)
+
+    print("Calculating Spearman correlations.")
+    corr_dict = math_logic.calculate_spearman(sample_df, gct_matrix)
+
+    print("Ranking matches.")
+    ranked_tissues = math_logic.rank_matches(corr_dict)
+    top_tissue = ranked_tissues[0][0]
+
+    if output_path:
+        print("Generating output files.")
+        visualization.plot_correlations(ranked_tissues, output_path)
+        visualization.plot_marker_heatmap(
+            sample_df, gct_matrix, top_tissue, output_path, gene_mapping=gene_map
+        )
+        report_path = os.path.join(output_path, "summary_report.html")
+        visualization.write_summary_report(ranked_tissues, report_path)
+        print(
+            f"Tissues successfully ranked. Top match is {top_tissue}. Results written to {output_path}."
+        )
+    else:
+        print(f"Tissues successfully ranked. Top match is {top_tissue}.")
+
+    return ranked_tissues
+
+
 def main() -> None:
     """
     Decides between running the tool on simulated data or real data.
@@ -68,8 +149,6 @@ def main() -> None:
     args = parse_arguments()
     print(f"Validating output directory: {args.output}")
     validate_output_directory(args.output)
-
-    gene_map = None
 
     # Simulation branch
     if args.mode == "simulated":
@@ -96,75 +175,38 @@ def main() -> None:
         sample_path = args.input
         ref_path = args.reference
 
-        if not ref_path:
-            ref_path = os.path.join(PROJECT_ROOT, "data", "master_reference_matrix.csv")
-            print("No custom GTEx reference file provided. Defaulting to bundled file.")
-
-    print(f"Loading reference GTEx matrix from {ref_path}.")
-    validate_file_path(ref_path, None)
-
-    if ref_path.endswith(".csv"):
-        gct_matrix = pd.read_csv(ref_path, index_col=0)
-        mapping_path = os.path.join(PROJECT_ROOT, "data", "gene_mapping.json")
-        try:
-            with open(mapping_path, "r") as f:
-                gene_map = json.load(f)
-        except FileNotFoundError:
-            print(
-                "Warning! gene_mapping.json not found. Heatmap defaulting to Ensembl IDs."
-            )
-    else:
-        gct_matrix = real_data.parse_raw_gct(ref_path)
-        gene_map = real_data.extract_gene_mapping(ref_path)
-
-    print(f"Loading input sample from {sample_path}.")
-    sample_df = load_input(sample_path)
-
-    # Removes any trailing periods after Ensembl ID that databases use to indicate version number
-    gct_matrix.index = gct_matrix.index.astype(str).str.split(".").str[0]
-    sample_df["Gene"] = sample_df["Gene"].astype(str).str.split(".").str[0]
-
-    print("Running input validation on full matrix")
-    validator = InputValidation(sample_df, gct_matrix)
-    sample_df = validator.run_all_validations()
-
-    print(f"Filtering reference matrix to top {args.num_genes} variable genes.")
-    gct_matrix = math_logic.filter_variable_genes(gct_matrix, n=args.num_genes)
-
-    print("Calculating Spearman correlations.")
-    corr_dict = math_logic.calculate_spearman(sample_df, gct_matrix)
-
-    print("Ranking matches and generating output files.")
-    ranked_tissues = math_logic.rank_matches(corr_dict)
-    visualization.plot_correlations(ranked_tissues, args.output)
-
-    top_tissue = ranked_tissues[0][0]
-    visualization.plot_marker_heatmap(
-        sample_df, gct_matrix, top_tissue, args.output, gene_mapping=gene_map
-    )
-
-    report_path = os.path.join(args.output, "summary_report.html")
-    visualization.write_summary_report(ranked_tissues, report_path)
-
-    print(
-        f"Tissues successfully ranked. Top match is {top_tissue}. Results written to {args.output}."
+    run_classifier(
+        sample_path=sample_path,
+        reference_path=ref_path,
+        num_genes=args.num_genes,
+        output_path=args.output,
     )
 
 
 def load_input(filepath: str) -> pd.DataFrame:
     """
-    Reads users CSV file, validates existence of "Gene" and "TPM" columns, returns Pandas DF. Note that the Gene column should contain Ensembl IDs in the format "ENSG00000X".
+    Reads a user CSV or TSV file, validates existence of "Gene" and "TPM" columns, and returns a Pandas DataFrame. Note that the Gene column should contain Ensembl IDs in the format "ENSG00000X".
 
     Args:
-        filepath: str, path to input CSV file.
+        filepath: str, path to input CSV or TSV file.
 
-    Input: CSV file with "Gene" and "TPM" columns.
+    Input: CSV or TSV file with "Gene" and "TPM" columns.
 
     Output: Pandas DataFrame with gene names and TPM values.
     """
-    validate_file_path(filepath, expected_extension=".csv")
+    validate_file_path(filepath, expected_extension=None)
 
-    sample_df = pd.read_csv(filepath)
+    lower_path = filepath.lower()
+    if lower_path.endswith(".tsv"):
+        sep = "\t"
+    elif lower_path.endswith(".csv"):
+        sep = ","
+    else:
+        raise ValueError(
+            f"Validation Error: Expected a '.csv' or '.tsv' file, but received '{filepath}'."
+        )
+
+    sample_df = pd.read_csv(filepath, sep=sep)
     required_cols = {"Gene", "TPM"}
     if not required_cols.issubset(sample_df.columns):
         missing = required_cols - set(sample_df.columns)
