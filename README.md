@@ -9,6 +9,8 @@ This tool utilizes the Genotype-Tissue Expression (GTEx) Portal, a database of t
 ## Project Description
 GTEx-Tissue-Classifier is a command-line Python utlity that takes TPM-normalized, processed gene expression data and computes the similarity to a backend database of human tissue signatures. GTEx-Tissue-Classifier is novel in its approach to labeling samples by leveraging visuals and QC to enhance the interpretability of results. 
 
+**Update:** The tool has now been updated with a Graphical User Interface hosted via a Streamlit web application, reducing the barrier to entry for wet-lab scientists. Simply upload the RNA sequencing sample file, choose desired number of highly-variable features, select an optional reference database, and run. The results will appear in the browser window as well as defined output location. 
+
 ## Input and output specifications
 ### Input
 The tool requires a TSV or CSV file containing processed RNA sequencing read quantification that has been TPM normalized. The file requires a Gene column and TPM column, with the gene column accepting either symbols or Ensembl IDs. 
@@ -41,8 +43,12 @@ cd GTEx-Tissue-Classifier
 # Build Docker image
 docker build -t gtex-classifier .
 
-# Run tool
+# Run tool (command line)
 docker run -v $(pwd):/data gtex-classifier gtex-classifier --input /data/your_sample.csv --output /data/results_folder
+
+# Optional: Run Web GUI. Run the following command, then navigate to http://localhost:8501 in the browser. 
+docker run -p 8501:8501 -v $(pwd):/data gtex-classifier streamlit run app.py
+
 ```
 
 
@@ -61,6 +67,9 @@ conda activate gtex-env
 
 # Install the package in editable mode
 pip install -e .
+
+# Optional: Run Web GUI. Run the following command, then navigate to http://localhost:8501 in the browser. 
+streamlit run app.py
 
 ```
 
